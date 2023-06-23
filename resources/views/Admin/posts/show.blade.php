@@ -10,11 +10,15 @@
                 <div class="card-body">
                     <h5 class="card-title">{{$post['title']}}</h5>
                   <p class="card-text">{{$post['content']}}</p>
-                  @if($elem->category)
-                  <div>{{$elem->category->title}}</div>
-                  @endif
-                  {{-- categories --}}
-                  {{-- <p class="card-text">{{ $post->category['title']}}</p> --}}
+
+                  @if( $post->tecnologies )
+                  @foreach ( $post->tecnologies as $elem )
+                    <div> {{ $elem->title }} </div>
+                  @endforeach
+               @endif
+
+                  
+
                 </div>
                 <a class="text-uppercase text-white text-decoration-none btn btn-outline-light"
                 href="{{ route('admin.posts.edit', $post) }}"> modifica elemento </a>

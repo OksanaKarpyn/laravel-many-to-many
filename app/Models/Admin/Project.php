@@ -21,4 +21,7 @@ class Project extends Model
         //belongsTo->questo dice collegamento con uno solo post
         return $this::belongsTo(Category::class);
     }
+    public function tecnologies(){
+        return $this->belongsToMany(Tecnology::class);
+    }
 }
