@@ -19,7 +19,7 @@ class Project extends Model
     // 1 post hanno una sola categoria
     public function category(){
         //belongsTo->questo dice collegamento con uno solo post
-        return $this::belongsTo(Category::class);
+        return $this->belongsTo(Category::class);
     }
     public function tecnologies(){
         return $this->belongsToMany(Tecnology::class);

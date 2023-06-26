@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Admin\Project;
+use App\Models\Admin\Tecnology;
 use App\Models\Admin\Category;
 use Illuminate\Support\Facades\Storage;
 
@@ -21,6 +22,7 @@ class ProjectController extends Controller
     {
         //
         $posts = Project::all();
+        
        return view('Admin.posts.index',compact('posts'));
     }
 
@@ -33,7 +35,8 @@ class ProjectController extends Controller
     {
         //
         $new_categories = Category::all();
-        return view ('Admin.posts.create',compact('new_categories'));
+        $tecnologies = Tecnology::all();
+        return view ('Admin.posts.create',compact('new_categories','tecnologies' ));
         
     }
 
@@ -45,19 +48,15 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        // $request->validate(
-        //     [
-        //        'title'=> ['required','max:30'] 
-        //     ]
-        // );
-     
-        //
+       
    
         $form_data = $request->validated();
         //dd($form_data);
         $form_data = $request->all();
         //dd($form_data);
 
+          
+        
         //inserimento img
             if( $request ->hasFile('image')){
                 //public folder esiste ,post_image,cartella che creo 
@@ -65,13 +64,20 @@ class ProjectController extends Controller
                 $form_data['image'] = $path;
             };
 
+            //$new_post = new Project(); 
+           // $new_post -> fill($form_data);
 
+       $post_create =  Project::create($form_data); 
+      
 
-        $new_post = new Project();
-        $new_post -> fill($form_data);
+         // controllo cheked tecnology
+        if( $request->has('tecnologies') ){
+            // associare alla tab pivot le info interne a tecnology
+            $post_create ->tecnologies()->attach($request->tecnologies);
+           }
          
-
-        $new_post -> save();
+       
+           $post_create -> save();
         return redirect()->route('admin.posts.index');
     }
 
@@ -100,8 +106,9 @@ class ProjectController extends Controller
     {
         //
         $new_categories = Category::all();
+        $tecnologies = Tecnology::all();
         $mod_post =  Project::find($id);
-        return view('Admin.posts.edit',compact('mod_post','new_categories'));
+        return view('Admin.posts.edit',compact('mod_post','new_categories','tecnologies'));
     }
 
     /**
@@ -135,6 +142,11 @@ class ProjectController extends Controller
          
         
         $mod_post->update($form_data);
+        
+        if( $request->has('tecnologies') ){
+           
+            $mod_post ->tecnologies()->sync($request->tecnologies);
+           }
        
         return redirect()->route('admin.posts.index');
     }
@@ -149,6 +161,9 @@ class ProjectController extends Controller
     {   
         //
         $mod_post =  Project::find($id);
+        
+        $mod_post->tecnologies()->sync( [] );
+      
         if( $mod_post->image) {
             Storage::delete($mod_post->image);
              }

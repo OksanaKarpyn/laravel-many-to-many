@@ -39,7 +39,47 @@
         @error('category_id')
         <div class="alert alert-danger">{{ $message }}</div>
     @enderror
-    </div>
+    </div> 
+      {{-- tecnology --}}
+    <div class="form-group mt-3">
+        @foreach($tecnologies as $elem)
+          <div class="form-check" @error('tecnologies') is-invalid @enderror>
+
+            @if($errors->any())
+
+          <input class="form-check-input"
+           type="checkbox"
+            value="{{$elem->id}}"
+             id="checkbox{{$elem->id}}" 
+             name="tecnologies[]" 
+          {{ in_array( $elem->id, old( 'tecnologies', [] ) ) ? 'checked' : '' }}>
+
+          <label class="form-check-label" for="checkbox{{$elem->id}}">
+             {{$elem->title}}
+          </label>
+
+          @else
+
+         <input class="form-check-input" 
+         type="checkbox"
+          value="{{$elem->id}}"
+           id="checkbox{{$elem->id}}"
+          name="tecnologies[]" 
+          {{ ($mod_post->tecnologies->contains($elem)) ? 'checked': '' }}>
+
+          <label class="form-check-label" for="checkbox{{$elem->id}}">
+             {{$elem->title}}
+          </label>
+
+          @endif
+
+          </div>
+          @endforeach
+      </div>
+      @error('tecnologies')
+      <div class="alert alert-danger">{{ $message }}</div>
+     @enderror
+
     <button type="submit" class="btn btn-primary btn-outline-light my-4 col-2 mx-auto text-uppercase"><strong> create </strong></button>
 </form>
 </div>

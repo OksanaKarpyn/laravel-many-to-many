@@ -15,7 +15,7 @@
                   @foreach ( $post->tecnologies as $elem )
                     <div> {{ $elem->title }} </div>
                   @endforeach
-               @endif
+                  @endif
 
                   
 
