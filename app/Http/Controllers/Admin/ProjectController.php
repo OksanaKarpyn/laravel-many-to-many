@@ -147,6 +147,11 @@ class ProjectController extends Controller
            
             $mod_post ->tecnologies()->sync($request->tecnologies);
            }
+              
+        else{
+           
+            $mod_post ->tecnologies()->sync([]);
+           }
        
         return redirect()->route('admin.posts.index');
     }
